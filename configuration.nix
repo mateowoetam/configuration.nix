@@ -25,6 +25,17 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Mullvad DNS
+  #networking.nameservers = [ "194.242.2.2#dns.mullvad.net" "194.242.2.3#adblock.dns.mullvad.net" ];
+  #
+  #services.resolved = {
+  #  enable = true;
+  #  dnssec = "true";
+  #  domains = [ "~." ];
+  #  fallbackDns = [ "194.242.2.3#adblock.dns.mullvad.net" ];
+  #  dnsovertls = "true";
+  #};
+
   # Set your time zone.
   time.timeZone = "America/Mexico_City";
 
