@@ -6,5 +6,5 @@
     xkbVariant = "";
   };
   services.displayManager.sddm.enable = true;
-  services.destkopManager.plasma6.enable = true;
+  services.desktopManager.plasma6.enable = true;
 }
