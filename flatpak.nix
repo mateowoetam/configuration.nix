@@ -1,7 +1,7 @@
 { config, pkgs, ...}:
 {
   # Enable flatpak support
-  services.flatpak.enable = true
+  services.flatpak.enable = true;
 
   # Add flatpak repositories (optional)
   environment.systemPackages = with pkgs; [
