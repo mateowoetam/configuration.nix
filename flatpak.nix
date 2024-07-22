@@ -1,4 +1,5 @@
-{ config, pkgs, ...}:
+{ config, pkgs, ... }:
+
 {
   # Enable flatpak support
   services.flatpak.enable = true;
@@ -11,10 +12,9 @@
   # Add Flathub repositories (optional)
   nixpkgs.config.packagesOverrides = pkgs: {
     flatpak = pkgs.flatpak.overrideAttrs (oldAttrs: rec {
-      postInstall = ''
+        postInstall = ''
         ${oldAttrs.postInstall or ""}
-        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-      '';
-      });
-    };
-}
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo;
+        '';
+    });
+};
