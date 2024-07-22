@@ -1,14 +1,14 @@
-{ config, pkgs, ...}:
+{ config, pkgs, ... }:
+
 {
-  security = {
-    doas = {
-      enable = true;
-      etxraRules = [{
-        users = ["user"];
-        keepEnv = true;
-        persist = true;
-     }];
-    };
-    sudo.enable = false;
-  };
+  # Enable doas and disable sudo
+  security.doas.enable = true;
+  security.sudo.enable = false;
+
+  # Configure doas
+  security.doas.extraRules = [{
+    users = [ "otto" ];  # Replace "otto" with your username
+    keepEnv = true;
+    persist = true;
+  }];
 }
