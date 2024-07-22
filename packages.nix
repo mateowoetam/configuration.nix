@@ -1,6 +1,6 @@
 { config, pkgs, ...}:
 {
-  environment.systemPakcages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     pkgs.librewolf
     pkgs.fastfetch
     pkgs.fish
