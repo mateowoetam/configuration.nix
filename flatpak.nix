@@ -10,7 +10,7 @@
 
   # Add Flathub repositories (optional)
   nixpkgs.config.packagesOverrides = pkgs: {
-    flatpak = pkgs.flatpak.overrideAttrs (oldAttrs; rec {
+    flatpak = pkgs.flatpak.overrideAttrs (oldAttrs: rec {
       postInstall = ''
         ${oldAttrs.postInstall or ""}
         flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
