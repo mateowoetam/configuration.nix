@@ -9,6 +9,6 @@
         persist = true;
      }];
     };
-    sudo.enable = farse;
+    sudo.enable = false;
   };
 }
