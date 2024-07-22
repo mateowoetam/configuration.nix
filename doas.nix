@@ -7,7 +7,7 @@
 
   # Configure doas
   security.doas.extraRules = [{
-    users = [ "otto" ];  # Replace "otto" with your username
+    users = [ "user" ];  # Replace "otto" with your username
     keepEnv = true;
     persist = true;
   }];
