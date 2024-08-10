@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./doas.nix
+    ./superuser.nix
     ./boot-loader.nix
     ./networking.nix
     ./display-manager.nix
