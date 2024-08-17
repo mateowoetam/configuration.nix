@@ -17,13 +17,42 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
+  nixpkgs.config.allowUnfree = true;
+
+  nix.package = pkgs.nix;
+
   home.packages = [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
     pkgs.vesktop
-    pkgs.prismlauncher
-
+    (pkgs.prismlauncher.override { jdks = [pkgs.temurin-bin-21 pkgs.temurin-bin-8 pkgs.temurin-bin-17 ]; })
+    pkgs.libreoffice-qt6-fresh
+    pkgs.mullvad-browser
+    pkgs.ungoogled-chromium
+    pkgs.authenticator
+    pkgs.bitwarden-desktop
+    pkgs.kcalc
+    pkgs.kcharselect
+    pkgs.bottles
+    pkgs.localsend
+    pkgs.deluge
+    pkgs.directx-headers
+    pkgs.apostrophe
+    pkgs.metadata-cleaner
+    pkgs.fwupd
+    #pkgs.ladybird
+    #pkgs.fswebcam
+    #pkgs.libsForQt5.kamoso
+    #Steam Stuff
+    pkgs.steam
+    pkgs.adwsteamgtk
+    pkgs.protonplus
+    pkgs.goverlay
+    pkgs.gamemode
+    pkgs.vlc
+    pkgs.wineWowPackages.staging
+    #pkgs.wineWowPackages.waylandFull
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -37,6 +66,17 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
+  # Declarative Flatpak apps
+  #imports = [ ./flake.nix inputs.nix-flatpak ];
+  #services.flatpak = {
+    #remotes = [{
+      #name = "flathub-beta"; location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
+    #}];
+    #packages = [
+      #{ appId = "net.mullvad.MullvadBrowser"; origin = "flathub";}
+      #{ appId = "io.github.ungoogled_software.ungoogled_chromium"; origin = "flathub";}
+    #];
+  #};
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -72,7 +112,7 @@
   home.sessionVariables = {
     # EDITOR = "emacs";
   };
-
+      
   programs.librewolf = {
     enable = true;
     settings = {
@@ -84,17 +124,21 @@
     };
   };
 
-
   programs.fish = {
     enable = true;
     shellAliases = {
       ll = "ls -l";
-      fetch = "fastfetch";
+      fetch = "clear && fastfetch";
       ".." = "cd ..";
+      garbage = "nix-collect-garbage -d";
     };
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
     '';
+  };
+
+  programs.mangohud = {
+    enable = true;
   };
 
   programs.fastfetch = {
@@ -208,7 +252,7 @@
         font = {
           size = 10;
           bold = {
-            family = "Liberation Mono";
+            family = "Geist Mono";
             style = "Regular";
           };
           bold_italic = {
@@ -220,7 +264,7 @@
             style = "Medium Italic";
           };
           normal = {
-            family = "Liberation Mono";
+            family = "Geist Mono";
             style = "Medium";
           };
         };
