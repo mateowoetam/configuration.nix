@@ -11,7 +11,7 @@ This are the changes I made from the default configuration.nix so far:
 - added Ungoogled-Chromium, Authenticator, Bitwarden, Bottles, LocalSend, Deluge, Aposrophe, Steam, ProtonPlus, Goverlay, and other tools in `./home.nix`
 - replaced `sudo` with `doas` **Remember to Change username**, in `./configuraiotn.nix`
 - both PulseAudio and Pipewire cofigured, in `./configuraiotn.nix`
-- added Wine Stable, Staging (optional) and Wayland aswell as Winetricks, in `./home.nix`
+- added Wine Stable, Staging and Wayland (optional) aswell as Winetricks, in `./home.nix`
 - added Bluetooth with Blueman, in `./configuraiotn.nix`
 - added and configrued the [Fish](https://github.com/fish-shell/fish-shell) shell (not set as default nor login), in `./home.nix`
 - added and configured [Fastfetch](https://github.com/fastfetch-cli/fastfetch/discussions?discussions_q=packages), in `./home.nix`
