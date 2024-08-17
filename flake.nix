@@ -1,48 +1,48 @@
+# flake.nix
 {
+  description = "My first Flake!";
 
- description = "My first Flake!";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.4.1";
+    stylix.url = "github:danth/stylix";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nix-gaming.url = "github:fufexan/nix-gaming";
+  };
 
- inputs = {
-   nixpkgs = {
-     url = "github:NixOS/nixpkgs/nixos-24.05";
-   };
-   stylix = {
-     url = "github:danth/stylix";
-   };
-   home-manager = {
-     url = "github:nix-community/home-manager/release-24.05";
-     inputs.nixpkgs.follows = "nixpkgs";
-   };
- };
-
- outputs = { self, nixpkgs, home-manager, ... }@inputs:
-   let
-     lib = nixpkgs.lib;
-     system = "x86_64-linux";
-     pkgs = nixpkgs.legacyPackages.${system};
-   in {
-   nixosConfigurations = {
-     nixos = lib.nixosSystem {
-      inherit system;
+  outputs = {self, nixpkgs, ...}@inputs: {
+    # Set up for NixOS
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      specialArgs = {inherit inputs;};
+      system = "x86_64-linux";
       modules = [
         ./configuration.nix
         inputs.stylix.nixosModules.stylix
+        inputs.nixos-hardware.nixosModules.asus-zephyrus-ga402x-amdgpu
+        inputs.chaotic.nixosModules.default
+        inputs.nix-flatpak.nixosModules.nix-flatpak
+        inputs.nix-gaming.nixosModules.platformOptimizations
       ];
-     };
-   };
-   homeConfigurations = {
-     user = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
+    };
+
+    # Set up for Home Manager
+    homeConfigurations.user = inputs.home-manager.lib.homeManagerConfiguration {
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+      };
+
+      extraSpecialArgs = {inherit inputs;};
+
       modules = [
         ./home.nix
+        inputs.chaotic.homeManagerModules.default
+        #inputs.nix-gaming.homeManagerModules.platformOptimizations
       ];
-     };
-
-   };
-
-
- };
-
-
+    };
+  };
 }
- 
