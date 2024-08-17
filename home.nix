@@ -52,7 +52,7 @@
     pkgs.gamemode
     pkgs.vlc
     pkgs.wineWowPackages.stable
-    pkgs.wineWowPackages.staging
+    #pkgs.wineWowPackages.staging
     pkgs.winetricks
     pkgs.wineWowPackages.waylandFull
     # # It is sometimes useful to fine-tune packages, for example, by applying
