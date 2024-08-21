@@ -100,7 +100,7 @@ in
 {
     services.xserver = {
         xkb.extraLayouts.zz = {
-            description = "My custom Halmak layout";
+            description = "English (Halmak)";
             languages = [ "eng" ];
             symbolsFile = myCustomLayout;
             };
