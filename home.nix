@@ -19,54 +19,87 @@
   # environment.
   nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.config.permittedInsecurePackages = [
+     "electron-27.3.11"
+  ];
+
   nix.package = pkgs.nix;
 
   home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-    pkgs.vesktop
-    (pkgs.prismlauncher.override { jdks = [pkgs.temurin-bin-21 pkgs.temurin-bin-8 pkgs.temurin-bin-17 ]; })
+    # Utilities
+    pkgs.alacritty
+    pkgs.filelight
+    pkgs.fwupd
+    pkgs.gnome-disk-utility
+    pkgs.kcalc
+    pkgs.kcharselect
+    pkgs.localsend
+    pkgs.metadata-cleaner
+    pkgs.keepassxc
+    pkgs.scrcpy
+    pkgs.thonny
+    pkgs.libsForQt5.kdeGear.keysmith
+    pkgs.gh
+    #pkgs.virtualbox
+    #pkgs.vscodium
+
+    # Browsers
     pkgs.libreoffice-qt6-fresh
     pkgs.mullvad-browser
     pkgs.ungoogled-chromium
+    #pkgs.ladybird
+
+    # Media
+    pkgs.vlc
+    #pkgs.libsForQt5.kamoso
+    pkgs.guvcview
+    pkgs.kdenlive
+    pkgs.mediawriter
+    #pkgs.gnome-sound-recorder
+    pkgs.deluge
+    pkgs.libsForQt5.ktorrent
+    # OBS stuff
+    pkgs.obs-studio
+    pkgs.obs-studio-plugins.obs-vkcapture
+    #pkgs.obs-studio-plugins.wlrobs-untsable
+    pkgs.obs-studio-plugins.obs-vaapi
+    pkgs.obs-studio-plugins.obs-backgroundremoval
+
+    # Social
+    pkgs.vesktop
+    pkgs.goofcord
+    #pkgs.legcord
+
+    # Gaming
+    #pkgs.bottles
+    pkgs.gamemode
+    pkgs.goverlay
+    #pkgs.mangojuice
+    #pkgs.protonplus
+    pkgs.steam
+    pkgs.wineWowPackages.stable
+
+    # Minecraft
+    (pkgs.prismlauncher.override { jdks = [pkgs.temurin-bin-21 pkgs.temurin-bin-8 pkgs.temurin-bin-17 ]; })
+
+    # Productivity
+    #pkgs.apostrophe
+    #pkgs.folio
+    pkgs.logseq
     pkgs.authenticator
     pkgs.bitwarden-desktop
-    pkgs.kcalc
-    pkgs.kcharselect
-    pkgs.bottles
-    pkgs.localsend
-    pkgs.deluge
-    pkgs.directx-headers
-    pkgs.apostrophe
-    pkgs.metadata-cleaner
-    pkgs.fwupd
-    #pkgs.ladybird
-    #pkgs.fswebcam
-    #pkgs.libsForQt5.kamoso
-    #Steam Stuff
-    pkgs.steam
-    pkgs.adwsteamgtk
-    pkgs.protonplus
-    pkgs.goverlay
-    pkgs.gamemode
-    pkgs.vlc
-    pkgs.wineWowPackages.stable
-    #pkgs.wineWowPackages.staging
-    pkgs.winetricks
-    #pkgs.wineWowPackages.waylandFull
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+    # Conferencing
+    pkgs.zoom-us
+    pkgs.teams-for-linux
+
+    # Development
+    pkgs.directx-headers
+
+    #LLMs
+    pkgs.kdePackages.alpaka
+
+
   ];
   # Declarative Flatpak apps
   #imports = [ ./flake.nix inputs.nix-flatpak ];
@@ -114,7 +147,16 @@
   home.sessionVariables = {
     # EDITOR = "emacs";
   };
-      
+
+  #gtk = {
+  #  enable = true;
+  #  theme = {
+  #  name = "Breeze-Dark";
+  #  package = pkgs.libsForQt5.breeze-gtk;
+  #  };
+  #};
+
+        
   programs.librewolf = {
     enable = true;
     settings = {
@@ -123,6 +165,11 @@
       "privacy.cleanOnShutdown.history" = false;
       "privacy.cleanOnShutdown.downloads" = false;
       "security.OCSP.require" = false;
+      #"media.eme.enabled" = true;
+      #"general.useragent.override" = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36";
+    };
+    package = pkgs.librewolf-wayland.override {
+      nativeMessagingHosts = with pkgs; [ plasma-browser-integration ];
     };
   };
 
@@ -138,16 +185,12 @@
       set fish_greeting # Disable greeting
     '';
   };
-
-  programs.mangohud = {
-    enable = true;
-  };
-
+  
   programs.fastfetch = {
     enable = true;
     settings = {
       logo = {
-        source = "nixos_small";
+        source = "linux";
         padding = {
           right = 1;
         };
@@ -180,13 +223,13 @@
           type = "packages";
           key = "Pkgs";
           keyColor = "blue";
-          format = "{10} (nix-user), {15} (flatpak-user)";
+          #format = "{10} (nix-user), {15} (flatpak-user)";
         }
         {
           type = "de";
           key = "DE";
           keyColor = "blue";
-          format = "{2} {3}";
+          #format = "{2} {3}";
         }
         {
           type = "shell";
@@ -239,7 +282,7 @@
   programs.alacritty = {
       enable = true;
       settings = {
-        live_config_reload = true;
+        general.live_config_reload = true;
         window = {
           opacity = 0.9;
           dimensions = {
@@ -247,7 +290,7 @@
             columns = 84;
           };
         };
-        shell = {
+       terminal. shell = {
           program = "${pkgs.fish}/bin/fish";
           args = [ "-c" "fastfetch; exec fish" ];
         };
