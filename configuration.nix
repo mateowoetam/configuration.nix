@@ -1,7 +1,9 @@
 # Edit this configuraiton file to define what should be installed one
 # your system. Help is available in the configuration.nix(5) man pag
 # and in the NixOS manual (accessible by running 'nixos-help').
-{ config, pkgs, ...}:
+{ config, pkgs, lib, ...}:
+
+with lib;
 
 {
   imports =
@@ -23,18 +25,7 @@
   networking.hostName = "nixos"; # Define your hostname.
   #networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
-  # Uncomment and configure if using a proxy
-  # proxy.default = "https://user:password@proxy:port/";
-  # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-  # Uncoment for Mullvad DNS
-  # nameservers = [ "194.242.2.2#base,dns.mullvad.net" "194.242.2.3#adblock.dns.mullvad.net"];
-  # services.resolved = {
-  #   enable = true;
-  #   dnssec = "true;
-  #   domanis = [ "~." ];
-  #   fallbackDns = [ "194.242.2.3#adblock.dns.mullvad.net" ];
-  #   dnsovertls = "true";
-  # };
+
   # Bluetooth
   hardware.bluetooth = {
     enable = true;
@@ -46,19 +37,19 @@
     };
   };
   services.blueman.enable = true;
-  # Bluetooth Codeecs
+  # Bluetooth Codecs
   # Set your time zone.
-  time.timeZone = "America/Mexico_City";
+  time.timeZone = "Europe/Berlin";
   # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
-
   # Enable the X11 windowing system
   # You can disable this if you're only using the Wayland session.
   services.xserver = {
     enable = true;
-    layout = "zz";
-    xkbVariant = "";
+    xkb.layout = "zz";
+    xkb.variant = "";
   };
+    
   #services.displayManager.sddm.wayand.enable = true;
   services.displayManager.sddm.enable = true; #set false if sddm wayland is true
   # Enable the KDE Plasma Desktop Environment.
@@ -66,29 +57,27 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
   # Enable sound with pipewire
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
   services.pipewire = {
-    enable = true;
-    alsa = {
-      enable = true;
-      support32Bit = true;
-    };
-    pulse.enable = true;
-    # Uncomment to enable JACK
-    # jack.enable = true;
-    # media-session.enable = true; # enabled by default
+   audio.enable = true;
+   enable = true;
+   alsa = {
+     enable = true;
+     support32Bit = true;
+   };
+  pulse.enable = true;
+   jack.enable = true;
+   wireplumber.enable = true;
   };
+
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  services.libinput.enable = true;
   # Define a user account. Don't forget to set a password with `passwd`.
   users.users.user = {
      isNormalUser = true;
      description = "User";
-     extraGroups = [ "networkmanager" "wheel" "gamemode" "cpugovctl" "sysctlgroup" "libvirtd" "kvm" "input" "plugdev"];
+     extraGroups = [ "networkmanager" "wheel" "gamemode" "cpugovctl" "sysctlgroup" "libvirtd" "kvm" "input" "plugdev" "tss"];
    };
-  # Configure superuser
+  # Configure privilege escalation utilities
   # Enable doas and disable sudo
   security.doas.enable = true;
   security.sudo.enable = false;
@@ -108,35 +97,54 @@
   # List packages installed in system profile. To search, run;
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    pkgs.flatpak
-    pkgs.librewolf
-    pkgs.fastfetch
-    # fish shell stuff
+    # Fish shell stuff
     pkgs.fish
     fishPlugins.done
     fishPlugins.fzf-fish
     fishPlugins.forgit
+    fishPlugins.grc
     fishPlugins.hydro
     fzf
-    fishPlugins.grc
     grc
+
+    # General utilities
+    pkgs.fastfetch
+    pkgs.flatpak
     pkgs.git
-    pkgs.wget
-    pkgs.libjxl
     pkgs.graphene-hardened-malloc
+    pkgs.libjxl
+    pkgs.librewolf
     pkgs.plasma-browser-integration
-    #ROCm stuff
+    pkgs.wget
+    pkgs.tpm-tools
+    pkgs.tpm2-tools
+    pkgs.tpm2-tss
+    pkgs.wayland
+    pkgs.gtk3
+
+    # ROCm stuff
     rocmPackages.rocm-core
-    rocmPackages.rocm-runtime
     rocmPackages.rocm-device-libs
-    rocmPackages.clr
+    rocmPackages.rocm-runtime
     rocmPackages.rocm-smi
     rocmPackages.rocminfo
+    rocmPackages.clr
+
     # Virtualization stuff
+    pkgs.qpwgraph
     pkgs.spice-gtk
+    pkgs.gst_all_1.gstreamer
+    pkgs.gst_all_1.gst-plugins-base
+    pkgs.gst_all_1.gst-plugins-good
+    pkgs.gst_all_1.gst-plugins-bad
+
+    # Uncomment if needed
+    #pkgs.easyeffects
     #pkgs.sddm-kcm
-    # vim # Uncomment if needed
+    # vim
+    # Drivers
   ];
+
   # Enable flatpak support
   services.flatpak.enable = true;
   # Add Flathub repository
@@ -147,13 +155,16 @@
     gpg-keys=flathub.gpg
   '';
   # Hardware Configuration #Steam #Controller #OpenGL #fwupd
-  hardware.xone.enable = true;
-  hardware.xpadneo.enable = true;
-  hardware.opengl = {
+  #hardware.xone.enable = true;
+  #hardware.xpadneo.enable = true;
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    #driSupport = true;
+    #driSupport32Bit = true;
+    extraPackages = [ pkgs.amdvlk ];
+    extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
   };
+  hardware.cpu.amd.updateMicrocode = true;
   hardware.steam-hardware.enable = true;
   services.fwupd.enable = true;
   # Fonts
@@ -167,36 +178,48 @@
   };
   # Virtualization software
   virtualisation = {
+     #virtualbox.host = {
+     #  enable = true;
+     #  enableKvm = true;
+     #  enableExtensionPack = true;
+     #  addNetworkInterface = false;
+     #};
      spiceUSBRedirection.enable = true;
      #waydroid.enable = true;
      libvirtd = {
        enable = true;
-       qemu.vhostUserPackages = [ pkgs.virtiofsd ];
+       qemu = {
+         vhostUserPackages = [ pkgs.virtiofsd ];
+         ovmf.enable = true;
+         swtpm.enable = true;
+         runAsRoot = true;
+       };
      };
   };
-  #qemu.options = ''
-    #-fsdev local,security_model=none,id=fsdev0,path=/path/to/shared/folder \
-    #-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=shared
-  #'';
-  programs.virt-manager.enable = true;
+  programs.virt-manager = {
+  enable = true;
+  package = pkgs.virt-manager.overrideAttrs (oldAttrs: { nativeBuildInputs = oldAttrs.nativeBuildInputs or [] ++ [ pkgs.wrapGAppsHook ]; buildInputs = pkgs.lib.lists.subtractLists [ pkgs.wrapGAppsHook ] oldAttrs.buildInputs ++ [ pkgs.gst_all_1.gst-plugins-base pkgs.gst_all_1.gst-plugins-good ]; });
+  };
   boot.kernelModules = [ "kvm-amd" ];
   services.spice-vdagentd.enable = true;
+
   # flakes configuraiton
-  nix.settings.experimental-features = [ "nix-command" "flakes"];
-  # Some programs need SUID wrappesr, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #     enable = true;
-  #     enableSHHSupport = true;
-  #};
-  # List services that you want to enable:
-  # Enable the OpenSSH daemon.
-  # services.openshh.enable = true;
-  # Open ports in the firewall.
-  # nentworking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorst = [ ... ];
-  # networking.firewall.enable = false.
+  nix.settings = {
+   allowed-users = ["*"];
+   auto-optimise-store = false;
+   max-jobs = "auto";
+   require-sigs = true;
+   sandbox = true;
+   sandbox-fallback = false;
+   substituters = [
+      "https://nix-community.cachix.org/"
+      "https://chaotic-nyx.cachix.org/"
+      "https://cache.nixos.org/"
+    ];
+   trusted-users = [ "root" "user" ];
+   extra-sandbox-paths = [];
+   experimental-features = [ "nix-command" "flakes" ];
+  };
 
   # This value detemines the NixOS release from which the defalt
   # settings for stateful data, like file locaitons and database versions
