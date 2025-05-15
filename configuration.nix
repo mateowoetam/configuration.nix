@@ -9,7 +9,7 @@ with lib;
   imports =
     [ # include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./keyboard.nix
+      #./keyboard.nix #unnecessary with my new way to install layout in .config
       ./chaotic.nix
     ];
   # Bootloader
@@ -121,6 +121,9 @@ with lib;
     pkgs.tpm2-tss
     pkgs.wayland
     pkgs.gtk3
+    pkgs.rar
+    pkgs.unrar-free
+    pkgs.uutils-coreutils
 
     # ROCm stuff
     rocmPackages.rocm-core
@@ -202,7 +205,10 @@ with lib;
   };
   boot.kernelModules = [ "kvm-amd" ];
   services.spice-vdagentd.enable = true;
-
+  
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true; 
+  
   # flakes configuraiton
   nix.settings = {
    allowed-users = ["*"];
@@ -227,5 +233,5 @@ with lib;
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
 }
