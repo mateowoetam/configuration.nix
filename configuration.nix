@@ -23,8 +23,8 @@ with lib;
   boot.kernelParams = [
      "amdgpu.dc=1"
      "acpi_osi="          # More generic than "Linux"
-     "pic=noaer"          # Supresses PCI AER logs
-     "quiet" "loglevel=3" # Hide non-critical kernel mesages
+     #"pic=noaer"          # Supresses PCI AER logs
+     #"quiet" "loglevel=3" # Hide non-critical kernel mesages
   ];
 
   networking.hostName = "nixos"; # Define your hostname.
