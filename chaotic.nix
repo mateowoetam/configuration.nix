@@ -4,7 +4,6 @@
     pkgs.mangohud32_git
     pkgs.mangohud_git
     pkgs.mesa32_git
-    pkgs.mesa32_git
     pkgs.gamescope_git
     ];
 
