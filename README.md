@@ -19,11 +19,11 @@ This are the changes I made from the default configuration.nix so far:
 - added Git and wget, in `./packages.nix`
 - added Flatpak support (though I think flathub isn't working), in `./configuraiotn.nix`
 - added [Flakes](https://nixos.wiki/wiki/flakes) support, in `./configuration.nix`
-- added [Vesktop](https://github.com/Vencord/Vesktop) in `./home.nix`
+- added [Goofcord](https://github.com/Milkshiift/GoofCord) in `./home.nix`
 - added [Prism Launcher](https://prismlauncher.org), in `./home.nix` with overrides for jdk8/17/21.
 - added [Steam Hardware](https://nixos.wiki/wiki/Steam) package, in `./configuraiton.nix`
-- used a [Flake](https://nixos.wiki/wiki/flakes) to add [Home Manager](https://nixos.wiki/wiki/Home_Manager) in `/flake.nix`
-- added my custom Halmak Keyboard layotu into the system (though it needs some work), in `./keyboard.nix`
+- used a [Flake](https://nixos.wiki/wiki/flakes) to add [Home Manager](https://nixos.wiki/wiki/Home_Manager) in `./flake.nix`
 - added ROCm support, in `./configuration.nix`
-- used [Stylix](https://stylix.dev/https://stylix.dev/) to theme the entire system to Catppuccin, in `./stylinx.nix`
 - added MangoHud, Mesa, Gamescope, and the CachyOS kernel from [Chaotic Nyx](https://www.nyx.chaotic.cx/).
+- added [ollama](https://github.com/ollama/ollama) and [Alpaka](https://github.com/KDE/alpaka) to play with LLMS in `./home.nix`
+- 
