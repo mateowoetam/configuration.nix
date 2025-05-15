@@ -22,7 +22,7 @@ with lib;
   boot.loader.systemd-boot.configurationLimit = 10;  # Show up to 10 generations
   boot.kernelParams = [
      "amdgpu.dc=1"
-     "acpi_osi="          # More generic than "Linux"
+     "acpi_osi=Linux"      
      #"pic=noaer"          # Supresses PCI AER logs
      #"quiet" "loglevel=3" # Hide non-critical kernel mesages
   ];
