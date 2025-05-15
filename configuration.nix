@@ -20,7 +20,12 @@ with lib;
   # Optional: Control the number of generations shown in the boot menu
   boot.loader.systemd-boot.editor = true;  # Allow editing kernel parameters at boot time
   boot.loader.systemd-boot.configurationLimit = 10;  # Show up to 10 generations
-  boot.kernelParams = [ ''amdgpu.dc=1'' ''acpi_osi=Linux'' ];
+  boot.kernelParams = [
+     "amdgpu.dc=1"
+     "acpi_osi="          # More generic than "Linux"
+     "pic=noaer"          # Supresses PCI AER logs
+     "quiet" "loglevel=3" # Hide non-critical kernel mesages
+  ];
 
   networking.hostName = "nixos"; # Define your hostname.
   #networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
