@@ -13,11 +13,12 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "24.11"; # Please read the comment before changing.
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowBroken = true;
 
   nixpkgs.config.permittedInsecurePackages = [
      "electron-27.3.11"
@@ -42,6 +43,8 @@
     pkgs.gh
     #pkgs.virtualbox
     #pkgs.vscodium
+    pkgs.qalculate-qt
+    pkgs.protonvpn-gui
 
     # Browsers
     pkgs.libreoffice-qt6-fresh
@@ -64,7 +67,10 @@
     #pkgs.obs-studio-plugins.wlrobs-untsable
     pkgs.obs-studio-plugins.obs-vaapi
     pkgs.obs-studio-plugins.obs-backgroundremoval
-
+    pkgs.gimp-with-plugins
+    pkgs.blender
+    #pkgs.prusa-slicer
+ 
     # Social
     pkgs.vesktop
     pkgs.goofcord
@@ -74,14 +80,19 @@
     #pkgs.bottles
     pkgs.gamemode
     pkgs.goverlay
-    #pkgs.mangojuice
-    #pkgs.protonplus
+    pkgs.protonplus
     pkgs.steam
     pkgs.wineWowPackages.stable
 
     # Minecraft
-    (pkgs.prismlauncher.override { jdks = [pkgs.temurin-bin-21 pkgs.temurin-bin-8 pkgs.temurin-bin-17 ]; })
-
+    (pkgs.prismlauncher.override {
+        jdks = [
+          pkgs.temurin-bin-21
+          pkgs.temurin-bin-8
+          pkgs.temurin-bin-17
+        ];
+    })
+    pkgs.gcc12
     # Productivity
     #pkgs.apostrophe
     #pkgs.folio
@@ -98,6 +109,7 @@
 
     #LLMs
     pkgs.kdePackages.alpaka
+    pkgs.ollama-rocm
 
 
   ];
@@ -155,7 +167,6 @@
   #  package = pkgs.libsForQt5.breeze-gtk;
   #  };
   #};
-
         
   programs.librewolf = {
     enable = true;
@@ -229,7 +240,7 @@
           type = "de";
           key = "DE";
           keyColor = "blue";
-          #format = "{2} {3}";
+          #format = "{} {}";
         }
         {
           type = "shell";
