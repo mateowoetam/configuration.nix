@@ -48,13 +48,14 @@ with lib;
   # Enable the X11 windowing system
   # You can disable this if you're only using the Wayland session.
   services.xserver = {
-    enable = true;
-    xkb.layout = "zz";
-    xkb.variant = "";
+    enable = false;
   };
-    
-  #services.displayManager.sddm.wayand.enable = true;
-  services.displayManager.sddm.enable = true; #set false if sddm wayland is true
+  programs.xwayland.enable = true;
+
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
   # Enable the KDE Plasma Desktop Environment.
   services.desktopManager.plasma6.enable = true;
   # Enable CUPS to print documents.
@@ -165,8 +166,7 @@ with lib;
   #hardware.xpadneo.enable = true;
   hardware.graphics = {
     enable = true;
-    #driSupport = true;
-    #driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = [ pkgs.amdvlk ];
     extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
   };
@@ -184,12 +184,6 @@ with lib;
   };
   # Virtualization software
   virtualisation = {
-     #virtualbox.host = {
-     #  enable = true;
-     #  enableKvm = true;
-     #  enableExtensionPack = true;
-     #  addNetworkInterface = false;
-     #};
      spiceUSBRedirection.enable = true;
      #waydroid.enable = true;
      libvirtd = {
