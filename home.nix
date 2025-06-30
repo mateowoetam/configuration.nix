@@ -190,12 +190,15 @@
       ll = "ls -l";
       fetch = "clear && fastfetch";
       ".." = "cd ..";
-      garbage = "nix-collect-garbage -d";
+      upnix = "cd /etc/nixos/ || exit && nix flake update && doas nixos-rebuild switch --flake . && nix store optimise && doas nix-collect-garbage --delete-older-than 3d";
+      garbage = "doas nix-collect-garbage --delete-older-than 3d";
+      ttm = "tt -quotes en -theme catppuccin-mocha";
     };
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
     '';
   };
+  
   
   programs.fastfetch = {
     enable = true;
