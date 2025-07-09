@@ -13,7 +13,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "24.11"; # Please read the comment before changing.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -21,7 +21,8 @@
   nixpkgs.config.allowBroken = true;
 
   nixpkgs.config.permittedInsecurePackages = [
-     "electron-27.3.11"
+     #"electron-27.3.11" # I think teams or goofcord idk
+     "olm-3.2.16" #for neochat
   ];
 
   nix.package = pkgs.nix;
@@ -29,60 +30,58 @@
   home.packages = [
     # Utilities
     pkgs.alacritty
-    pkgs.filelight
+    pkgs.kdePackages.filelight
     pkgs.fwupd
     pkgs.gnome-disk-utility
-    pkgs.kcalc
-    pkgs.kcharselect
-    pkgs.localsend
-    pkgs.metadata-cleaner
-    pkgs.keepassxc
-    pkgs.scrcpy
-    pkgs.thonny
-    pkgs.libsForQt5.kdeGear.keysmith
+    pkgs.kdePackages.kcalc
+    pkgs.kdePackages.kcharselect
     pkgs.gh
-    #pkgs.virtualbox
-    #pkgs.vscodium
-    pkgs.qalculate-qt
     pkgs.protonvpn-gui
+    pkgs.mullvad-vpn
 
     # Browsers
-    pkgs.libreoffice-qt6-fresh
     pkgs.mullvad-browser
     pkgs.ungoogled-chromium
-    #pkgs.ladybird
+    pkgs.ladybird
 
     # Media
     pkgs.vlc
-    #pkgs.libsForQt5.kamoso
     pkgs.guvcview
-    pkgs.kdenlive
-    pkgs.mediawriter
-    #pkgs.gnome-sound-recorder
+    pkgs.kdePackages.kdenlive
+    pkgs.kdePackages.krecorder
     pkgs.deluge
-    pkgs.libsForQt5.ktorrent
+    #pkgs.kdePackages.ktorrent
+    pkgs.blender
+    pkgs.gimp-with-plugins
+
+    # Writing
+    pkgs.libreoffice-qt-fresh
+    pkgs.kdePackages.ghostwriter
+    pkgs.mediawriter
+    pkgs.tt
+
     # OBS stuff
     pkgs.obs-studio
     pkgs.obs-studio-plugins.obs-vkcapture
     #pkgs.obs-studio-plugins.wlrobs-untsable
     pkgs.obs-studio-plugins.obs-vaapi
     pkgs.obs-studio-plugins.obs-backgroundremoval
-    pkgs.gimp-with-plugins
-    pkgs.blender
-    #pkgs.prusa-slicer
  
     # Social
-    pkgs.vesktop
     pkgs.goofcord
-    #pkgs.legcord
-
+    pkgs.kdePackages.neochat
+    pkgs.element-desktop
+ 
     # Gaming
-    #pkgs.bottles
+    #(pkgs.bottles.override { removeWarningPopup = true;})
     pkgs.gamemode
     pkgs.goverlay
     pkgs.protonplus
     pkgs.steam
     pkgs.wineWowPackages.stable
+    pkgs.mcrcon
+    #pkgs.suyu
+    pkgs.ryubing
 
     # Minecraft
     (pkgs.prismlauncher.override {
@@ -90,19 +89,20 @@
           pkgs.temurin-bin-21
           pkgs.temurin-bin-8
           pkgs.temurin-bin-17
+          pkgs.glfw-wayland-minecraft
+          pkgs.gcc13
         ];
     })
-    pkgs.gcc12
+    pkgs.mcpelauncher-ui-qt   
+ 
     # Productivity
-    #pkgs.apostrophe
-    #pkgs.folio
-    pkgs.logseq
     pkgs.authenticator
+    pkgs.kdePackages.keysmith
     pkgs.bitwarden-desktop
 
     # Conferencing
-    pkgs.zoom-us
-    pkgs.teams-for-linux
+    #pkgs.zoom-us
+    #pkgs.teams-for-linux
 
     # Development
     pkgs.directx-headers
@@ -113,18 +113,6 @@
 
 
   ];
-  # Declarative Flatpak apps
-  #imports = [ ./flake.nix inputs.nix-flatpak ];
-  #services.flatpak = {
-    #remotes = [{
-      #name = "flathub-beta"; location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
-    #}];
-    #packages = [
-      #{ appId = "net.mullvad.MullvadBrowser"; origin = "flathub";}
-      #{ appId = "io.github.ungoogled_software.ungoogled_chromium"; origin = "flathub";}
-    #];
-  #};
-
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
@@ -141,7 +129,12 @@
   };
 
   # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
+  home.sessionVariables = { #These will be explicitly sourced when using a
+    NIXOS_OZONE_WL = "1";
+    QT_QPA_PLATFORM = "wayland";
+    MOZ_ENABLE_WAYLAND = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+  };
   # shell provided by Home Manager. If you don't want to manage your shell
   # through Home Manager then you have to manually source 'hm-session-vars.sh'
   # located at either
@@ -164,7 +157,7 @@
   #  enable = true;
   #  theme = {
   #  name = "Breeze-Dark";
-  #  package = pkgs.libsForQt5.breeze-gtk;
+  #  package = pkgs.kdePackages.breeze-gtk;
   #  };
   #};
         
@@ -180,7 +173,7 @@
       #"general.useragent.override" = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36";
     };
     package = pkgs.librewolf-wayland.override {
-      nativeMessagingHosts = with pkgs; [ plasma-browser-integration ];
+      nativeMessagingHosts = with pkgs; [ kdePackages.plasma-browser-integration ];
     };
   };
 
