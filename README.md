@@ -68,6 +68,15 @@ This repo contains a **Flake-based NixOS setup** focused on a modern, private, a
 * Applies custom wallpaper (`sddm.png`) to Breeze theme.
 * Fully themed login screen with Wayland support.
 
+## Chaotic-Nyx Enhancements (`chaotic.nix`)
+
+* Switches to **CachyOS kernel** (`linuxPackages_cachyos`) for low-latency responsiveness.
+* Installs `mangohud_git`, `gamescope_git`, and `mesa32_git` for overlays, micro-compositing, and 32-bit gaming support.
+*  Optional extras (commented):
+
+    * `chaotic.scx.enable`: Experimental CPU scheduler (SchedExt).
+    * `chaotic.hdr.enable`: HDR display support.
+
 ---
 
 ### Flake Inputs
