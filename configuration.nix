@@ -11,6 +11,7 @@ with lib;
       ./hardware-configuration.nix
       #./keyboard.nix #unnecessary with my new way to install layout in .config
       ./chaotic.nix
+      ./sddm.nix
     ];
   # Bootloader
   boot.loader.systemd-boot.enable = true;
@@ -20,15 +21,17 @@ with lib;
   # Optional: Control the number of generations shown in the boot menu
   boot.loader.systemd-boot.editor = true;  # Allow editing kernel parameters at boot time
   boot.loader.systemd-boot.configurationLimit = 10;  # Show up to 10 generations
-  boot.kernelParams = [
-     "amdgpu.dc=1"
-     "acpi_osi=Linux"      
+  boot.kernelParams = [ 
+     "amdgpu.dc=1" 
+     "acpi_osi=Linux"
   ];
 
   networking.hostName = "nixos"; # Define your hostname.
   #networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
-
+  networking.modemmanager.enable = false;
+  #services.nscd.enable = false; # for chache of name service requests
+  
   # Bluetooth
   hardware.bluetooth = {
     enable = true;
@@ -42,20 +45,35 @@ with lib;
   services.blueman.enable = true;
   # Bluetooth Codecs
   # Set your time zone.
-  time.timeZone = "Europe/Berlin";
+  time.timeZone = "America/Mexico_City"; # Europe/Berlin # America/Mexico_City
   # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
   # Enable the X11 windowing system
   # You can disable this if you're only using the Wayland session.
   services.xserver = {
     enable = false;
+    #xkb.layout = "us";
+    #xkb.variant = "";
   };
   programs.xwayland.enable = true;
 
+  # Wireguard
+  networking.wireguard = { 
+    enable = true;
+  };  
+  #Mullvad
+  services.mullvad-vpn.enable = true;
+
+  # SDDM
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
+    #theme = "breeze";
+    settings = {
+       };
   };
+  
+
   # Enable the KDE Plasma Desktop Environment.
   services.desktopManager.plasma6.enable = true;
   # Enable CUPS to print documents.
@@ -95,9 +113,11 @@ with lib;
   # Allow unfree packages = true;
   nixpkgs.config.allowUnfree = true;
   # Auto system update
-  system.autoUpgrade.enable = true;
+  system.autoUpgrade.enable = false;
   # Deconfigure Firefox
   programs.firefox.enable = false;
+  # ADB
+  programs.adb.enable = true;
   # List packages installed in system profile. To search, run;
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -115,19 +135,22 @@ with lib;
     pkgs.fastfetch
     pkgs.flatpak
     pkgs.git
-    pkgs.graphene-hardened-malloc
     pkgs.libjxl
     pkgs.librewolf
-    pkgs.plasma-browser-integration
+    kdePackages.plasma-browser-integration
     pkgs.wget
     pkgs.tpm-tools
     pkgs.tpm2-tools
     pkgs.tpm2-tss
     pkgs.wayland
-    pkgs.gtk3
+    pkgs.glfw-wayland-minecraft
     pkgs.rar
     pkgs.unrar-free
-    pkgs.uutils-coreutils
+    pkgs.bat
+    pkgs.tldr
+    (pkgs.uutils-coreutils.override {prefix ="";})
+    kdePackages.wallpaper-engine-plugin
+    #kdePackages.krohnkite # tiling extension for KWin
 
     # ROCm stuff
     rocmPackages.rocm-core
@@ -137,19 +160,19 @@ with lib;
     rocmPackages.rocminfo
     rocmPackages.clr
 
+    # Zluda or Cuda on AMD
+    pkgs.zluda
+
     # Virtualization stuff
-    pkgs.qpwgraph
     pkgs.spice-gtk
     pkgs.gst_all_1.gstreamer
     pkgs.gst_all_1.gst-plugins-base
     pkgs.gst_all_1.gst-plugins-good
     pkgs.gst_all_1.gst-plugins-bad
 
-    # Uncomment if needed
-    #pkgs.easyeffects
-    #pkgs.sddm-kcm
-    # vim
     # Drivers
+    pkgs.dxvk
+    pkgs.vkd3d-proton
   ];
 
   # Enable flatpak support
@@ -172,7 +195,9 @@ with lib;
   };
   hardware.cpu.amd.updateMicrocode = true;
   hardware.steam-hardware.enable = true;
+  programs.gamemode.enable = true;
   services.fwupd.enable = true;
+
   # Fonts
   fonts = {
     enableDefaultPackages = true;
@@ -182,10 +207,10 @@ with lib;
       geist-font
     ];
   };
+
   # Virtualization software
   virtualisation = {
      spiceUSBRedirection.enable = true;
-     #waydroid.enable = true;
      libvirtd = {
        enable = true;
        qemu = {
@@ -209,7 +234,7 @@ with lib;
   # flakes configuraiton
   nix.settings = {
    allowed-users = ["*"];
-   auto-optimise-store = false;
+   auto-optimise-store = true;
    max-jobs = "auto";
    require-sigs = true;
    sandbox = true;
@@ -230,5 +255,5 @@ with lib;
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
 }
