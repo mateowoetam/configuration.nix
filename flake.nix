@@ -2,21 +2,17 @@
   description = "My NixOS Flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";  #nixos-25.05
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager"; #release-25.05
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-gaming.url = "github:fufexan/nix-gaming";
-    suyu = {
-      url = "git+https://git.suyu.dev/suyu/nix-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, chaotic, home-manager, nixos-hardware, nix-gaming, suyu, ... }@inputs: {
+  outputs = { self, nixpkgs, chaotic, home-manager, nixos-hardware, flake-utils, nix-gaming, ... }@inputs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -34,7 +30,6 @@
       modules = [
         ./home.nix
         chaotic.homeManagerModules.default
-        suyu.packages.x86_64-linux.suyu
       ];
     };
   };
