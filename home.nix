@@ -190,15 +190,18 @@
       ll = "ls -l";
       fetch = "clear && fastfetch";
       ".." = "cd ..";
-      upnix = "cd /etc/nixos/ || exit && nix flake update && doas nixos-rebuild switch --flake . && nix store optimise && doas nix-collect-garbage --delete-older-than 3d";
-      garbage = "doas nix-collect-garbage --delete-older-than 3d";
+      nfu = "cd /etc/nixos/ || exit && nix flake update";
+      nrs = "cd /etc/nixos/ || exit && doas nixos-rebuild switch --flake .";
+      nso = "cd /etc/nixos/ || exit && nix store optimise";
+      ncg = "cd /etc/nixos/ || exit && doas nix-collect-garbage --delete-older-than 3d";
+      hms = "cd /etc/nixos/ || exit && home-manager switch --flake .";
+      unx = "cd /etc/nixos/ || exit && nix flake update && doas nixos-rebuild switch --flake . && nix store optimise && doas nix-collect-garbage --delete-older-than 3d && home-manager switch --flake .";
       ttm = "tt -quotes en -theme catppuccin-mocha";
     };
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
     '';
   };
-  
   
   programs.fastfetch = {
     enable = true;
