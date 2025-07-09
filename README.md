@@ -1,29 +1,90 @@
-This is my personal (Work in progress) NixOS configuration file
+## My personal NixOS Configuration Overview (work in progress, as always)
 
-I run NixOS with Plasma 6 Wayland, with Grub, Systemd, and unfree packagess allowed installed from live ISO
-(you might want to change things like the Timezone)
+This repo contains a **Flake-based NixOS setup** focused on a modern, private, and performant desktop experience—optimized for **Wayland**, **gaming**, **development**, and **content creation**.
 
-This are the changes I made from the default configuration.nix so far:
+---
 
-- uses Unfree software, in `./configuraiotn.nix`
-- uses Plasma 6, in `./configuraiotn.nix`
-- replaced Firefox with Librewolf, and configured some settings, in `./configuraiotn.nix` configured in `./home.nix`
-- added Ungoogled-Chromium, Authenticator, Bitwarden, Bottles, LocalSend, Deluge, Aposrophe, Steam, ProtonPlus, Goverlay, and other tools in `./home.nix`
-- replaced `sudo` with `doas` **Remember to Change username**, in `./configuraiotn.nix`
-- both PulseAudio and Pipewire cofigured, in `./configuraiotn.nix`
-- added Wine Stable, Staging and Wayland (optional) aswell as Winetricks, in `./home.nix`
-- added Bluetooth with Blueman, in `./configuraiotn.nix`
-- added and configrued the [Fish](https://github.com/fish-shell/fish-shell) shell (not set as default nor login), in `./home.nix`
-- added and configured [Fastfetch](https://github.com/fastfetch-cli/fastfetch/discussions?discussions_q=packages), in `./home.nix`
-- added and configured [Alacritty](https://alacritty.org/), in `./home.nix`
-- added Git and wget, in `./packages.nix`
-- added Flatpak support (though I think flathub isn't working), in `./configuraiotn.nix`
-- added [Flakes](https://nixos.wiki/wiki/flakes) support, in `./configuration.nix`
-- added [Goofcord](https://github.com/Milkshiift/GoofCord) in `./home.nix`
-- added [Prism Launcher](https://prismlauncher.org), in `./home.nix` with overrides for jdk8/17/21.
-- added [Steam Hardware](https://nixos.wiki/wiki/Steam) package, in `./configuraiton.nix`
-- used a [Flake](https://nixos.wiki/wiki/flakes) to add [Home Manager](https://nixos.wiki/wiki/Home_Manager) in `./flake.nix`
-- added ROCm support, in `./configuration.nix`
-- added MangoHud, Mesa, Gamescope, and the CachyOS kernel from [Chaotic Nyx](https://www.nyx.chaotic.cx/).
-- added [ollama](https://github.com/ollama/ollama) and [Alpaka](https://github.com/KDE/alpaka) to play with LLMS in `./home.nix`
-- 
+### System & Boot
+
+* Uses **systemd-boot**, disables GRUB.
+* AMD-optimized kernel params, EFI, ACPI tweaks.
+* Manages boot generations and boot-time flags.
+
+### Networking & VPN
+
+* `NetworkManager` with **WireGuard** and **Mullvad VPN**.
+* Disables wpa\_supplicant & ModemManager.
+
+### Audio / Input / Bluetooth
+
+* **PipeWire** with JACK, PulseAudio, and ALSA.
+* **Blueman** for Bluetooth.
+* **Libinput** for touchpad.
+
+### Display & Desktop
+
+* **Wayland-only**, no X11.
+* **SDDM** with Breeze theme + custom wallpaper.
+* **KDE Plasma 6** with XWayland for legacy apps.
+
+### Security & Users
+
+* Uses `doas` instead of `sudo`.
+* Creates user `"user"` with wide group access (networking, libvirtd, etc).
+
+### Core Packages
+
+* Shell tools: `fish`, `fzf`, `grc`, `tldr`, `fastfetch`.
+* Browsers: `librewolf`, `ungoogled-chromium`, `mullvad-browser`.
+* Media: `vlc`, `gimp-with-plugins`, `kdenlive`, `obs-studio` (VAAPI, VK).
+* Dev tools: `alacritty`, `bitwarden`, `flatpak`, `ollama-rocm`, `AppImage`.
+* Gaming: `steam`, `wine`, `prismlauncher`, `goverlay`, `gamemode`.
+
+### System Services & Hardware
+
+* Printing (CUPS), ADB, firmware updates via `fwupd`.
+* Virtualization: QEMU, libvirt, OVMF, TPM, spice-vdagent.
+* ROCm, DXVK, VKD3D, and **ZLUDA** (CUDA alt).
+
+### Localization & Fonts
+
+* Locale: `en_US.UTF-8`, Timezone: `America/Mexico_City`.
+* Accessible fonts (e.g. **Atkinson Hyperlegible**).
+
+### Nix & Home Manager
+
+* Flakes + `nix-command` enabled.
+* Pinned Home Manager `25.05`.
+* Custom Home Manager setup with dotfile support.
+
+### Environment & Shell
+
+* Wayland-optimized env vars for Qt/Electron/Mozilla.
+* Fish shell with aliases, no greeting.
+* Fastfetch with custom logo and layout.
+
+### SDDM Customization
+
+* Applies custom wallpaper (`sddm.png`) to Breeze theme.
+* Fully themed login screen with Wayland support.
+
+---
+
+### Flake Inputs
+
+| Input                | Purpose                    |
+| -------------------- | -------------------------- |
+| `nixpkgs (unstable)` | Latest packages            |
+| `chaotic-nyx`        | Gaming + custom modules    |
+| `home-manager`       | User config                |
+| `nixos-hardware`     | Zephyrus G14 (AMD) support |
+| `nix-gaming`         | Gaming perf tweaks         |
+
+---
+
+## Goals
+
+* Private, minimal, and reproducible setup
+* Full control of system & user layers
+* Gaming-ready (ROCm, Wine, Steam, etc.)
+* Clean, Wayland-native desktop
