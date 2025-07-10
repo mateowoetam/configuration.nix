@@ -9,8 +9,8 @@ This repo contains a **Flake-based NixOS setup** focused on a modern, private, a
 * Uses **systemd-boot**, disables GRUB.
 * AMD-optimized kernel params, EFI, ACPI tweaks.
 * Manages boot generations and boot-time flags.
-* Secureboot enabled through `lanzaboote`
-* I don't have LUKS on my laptop yet because I hadn't learned how to set it up during installation, but I do on my PC (config coming soon).
+* Secureboot enabled through `lanzaboote`. to get the keys use `sbctl create-keys`, you can geat the package through nix shell or in your config beforehand.
+* I have **LUKS** commented out because it's not on all my devices.
 
 ### Networking & VPN
 
