@@ -9,6 +9,8 @@ This repo contains a **Flake-based NixOS setup** focused on a modern, private, a
 * Uses **systemd-boot**, disables GRUB.
 * AMD-optimized kernel params, EFI, ACPI tweaks.
 * Manages boot generations and boot-time flags.
+* Secureboot enabled through `lanzaboote`
+* I don't have LUKS on my laptop yet because I hadn't learned how to set it up during installation, but I do on my PC (config coming soon).
 
 ### Networking & VPN
 
@@ -88,6 +90,7 @@ This repo contains a **Flake-based NixOS setup** focused on a modern, private, a
 | `home-manager`       | User config                |
 | `nixos-hardware`     | Zephyrus G14 (AMD) support |
 | `nix-gaming`         | Gaming perf tweaks         |
+| `lanzaboote`         | Secureboot                 |
 
 ---
 
