@@ -14,7 +14,7 @@ with lib;
       ./sddm.nix
     ];
   # Bootloader
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false; #true without secureboot
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = false;
   boot.loader.efi.efiSysMountPoint = "/boot";  # Ensure this points to your EFI partition
@@ -25,7 +25,13 @@ with lib;
      "amdgpu.dc=1" 
      "acpi_osi=Linux"
   ];
+  boot.lanzaboote = {
+      enable = true;
+      enrollKeys = true;
+      pkiBundle = "/var/lib/sbctl";
+  };
 
+  
   networking.hostName = "nixos"; # Define your hostname.
   #networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
@@ -121,6 +127,9 @@ with lib;
   # List packages installed in system profile. To search, run;
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Secureboot
+    pkgs.sbctl
+
     # Fish shell stuff
     pkgs.fish
     fishPlugins.done
@@ -206,6 +215,17 @@ with lib;
       atkinson-hyperlegible
       geist-font
     ];
+  };
+
+  # Nano text editor
+  programs.nano = {
+     enable = true;
+     nanorc = "
+        #set mouse
+        set autoindent
+        set linenumbers
+     ";
+     syntaxHighlight = true;
   };
 
   # Virtualization software
