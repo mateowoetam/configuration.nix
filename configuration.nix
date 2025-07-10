@@ -38,6 +38,9 @@ with lib;
     #};
   #};
 
+  # TPM2
+  security.tpm2.enable = true;
+
   
   networking.hostName = "nixos"; # Define your hostname.
   #networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
@@ -136,6 +139,10 @@ with lib;
   environment.systemPackages = with pkgs; [
     # Secureboot
     pkgs.sbctl
+
+    # LUKS
+    tpm2-tools
+    tpm2-tss
 
     # Fish shell stuff
     pkgs.fish
