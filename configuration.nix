@@ -30,6 +30,13 @@ with lib;
       enrollKeys = true;
       pkiBundle = "/var/lib/sbctl";
   };
+  #boot.initrd.luks.devices = {
+    #cryptroot = {
+      #device = "/dev/disk/by-partuuid/uuid-goes-here";  # Use PARTUUID for LUKS
+      #allowDiscards = true;  # Used if primary device is a SSD
+      #preLVM = true;
+    #};
+  #};
 
   
   networking.hostName = "nixos"; # Define your hostname.
