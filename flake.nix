@@ -10,9 +10,13 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-gaming.url = "github:fufexan/nix-gaming";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, chaotic, home-manager, nixos-hardware, flake-utils, nix-gaming, ... }@inputs: {
+  outputs = { self, nixpkgs, chaotic, home-manager, nixos-hardware, nix-gaming, lanzaboote, ... }@inputs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -21,6 +25,7 @@
         nixos-hardware.nixosModules.asus-zephyrus-ga402x-amdgpu
         chaotic.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
+        lanzaboote.nixosModules.lanzaboote
       ];
     };
 
