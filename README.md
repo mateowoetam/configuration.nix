@@ -1,6 +1,6 @@
 ## My personal NixOS Configuration Overview (work in progress, as always)
 
-This repo contains a **Flake-based NixOS setup** focused on a modern, private, and performant desktop experience—optimized for **Wayland**, **gaming**, **development**, and **content creation**.
+This repo features a **Flake-based NixOS setup** focused on a **Wayland-focused KDE experience** with **gaming**, virtualization, daily use, and privacy in mind. It’s configured with the help of `statix` and `nixfmt-rfc-style` to stick to **NixOS** formatting standards!
 
 ---
 
