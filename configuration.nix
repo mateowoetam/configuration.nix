@@ -1,5 +1,5 @@
-# Edit this configuraiton file to define what should be installed one
-# your system. Help is available in the configuration.nix(5) man pag
+# Edit this configuration file to define what should be installed one
+# your system. Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 {
   config,
@@ -35,6 +35,7 @@ with lib;
     };
     kernelParams = [
       "amdgpu.dc=1"
+      #"amd_iommu=on"
       "acpi_osi=Linux"
     ];
     kernelModules = [ "kvm-amd" ];
@@ -60,7 +61,7 @@ with lib;
       enable = true;
       extraRules = [
         {
-          users = [ "user" ]; # Replace "otto" with your username
+          users = [ "user" ]; # Replace "user" with your username
           keepEnv = true;
           persist = true;
         }
@@ -72,8 +73,14 @@ with lib;
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
-    modemmanager.enable = false;
+    modemmanager.enable = true;
     wireguard.enable = true;
+    firewall = {
+      trustedInterfaces = [
+        "wlp5s0"
+        "virbr0"
+      ];
+    };
   };
 
   # Hardware Configuration #Steam #Controller #OpenGL #fwupd #Bluetooth
@@ -126,6 +133,38 @@ with lib;
     };
     fwupd.enable = true;
     spice-vdagentd.enable = true;
+    spice-webdavd.enable = true;
+    resolved.enable = true;
+    flatpak = {
+      remotes = lib.mkOptionDefault [
+        {
+          name = "flathub";
+          location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+        }
+        {
+          name = "flathub-beta";
+          location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
+        }
+        {
+          name = "rhel";
+          location = "https://flatpaks.redhat.io/rhel.flatpakrepo";
+        }
+        {
+          name = "fedora";
+          location = "oci+https://registry.fedoraproject.org";
+        }
+        {
+          name = "fedora-testing";
+          location = "oci+https://registry.fedoraproject.org#testing";
+        }
+      ];
+      packages = [
+        #{ appId = "github.tchx84.Flatseal"; origin = "flathub-beta"; }
+        #
+      ];
+      #uninstallUnmanaged = true;
+      #update.onActivation = true;
+    };
   };
 
   # Define a user account. Don't forget to set a password with `passwd`.
@@ -157,23 +196,16 @@ with lib;
   # List packages installed in system profile. To search, run;
   # $ nix search wget
   environment = {
-    etc."flatpak/remotes.d/flathub.conf".source = pkgs.writeText "flathub.conf" ''
-    [remote "flathub"]
-    url=https://dl.flathub.org/repo/
-    gpg-verify=true
-    gpg-keys=flathub.gpg
-
-    '';
     systemPackages = with pkgs; [
       # Secureboot
-      pkgs.sbctl
+      sbctl
 
       # LUKS
       tpm2-tools
       tpm2-tss
 
       # Fish shell stuff
-      pkgs.fish
+      fish
       fishPlugins.done
       fishPlugins.fzf-fish
       fishPlugins.forgit
@@ -183,27 +215,28 @@ with lib;
       grc
 
       # General utilities
-      pkgs.fastfetch
-      pkgs.flatpak
-      pkgs.git
-      pkgs.libjxl
-      pkgs.librewolf
+      fastfetch
+      flatpak
+      git
+      libjxl
+      librewolf
       kdePackages.plasma-browser-integration
-      pkgs.wget
-      pkgs.tpm-tools
-      pkgs.tpm2-tools
-      pkgs.tpm2-tss
-      pkgs.wayland
-      pkgs.glfw-wayland-minecraft
-      pkgs.rar
-      pkgs.unrar-free
-      pkgs.bat
-      pkgs.tldr
-      (pkgs.uutils-coreutils.override { prefix = ""; })
+      wget
+      tpm-tools
+      tpm2-tools
+      tpm2-tss
+      wayland
+      glfw-wayland-minecraft
+      rar
+      unrar-free
+      bat
+      tldr
+      (uutils-coreutils.override { prefix = ""; })
       kdePackages.wallpaper-engine-plugin
-      pkgs.nixfmt-rfc-style
-      pkgs.statix
-      pkgs.cachix
+      nixfmt-rfc-style
+      statix
+      cachix
+      tree
 
       # ROCm stuff
       rocmPackages.rocm-core
@@ -214,18 +247,18 @@ with lib;
       rocmPackages.clr
 
       # Zluda or Cuda on AMD
-      pkgs.zluda
+      zluda
 
       # Virtualization stuff
-      pkgs.spice-gtk
-      pkgs.gst_all_1.gstreamer
-      pkgs.gst_all_1.gst-plugins-base
-      pkgs.gst_all_1.gst-plugins-good
-      pkgs.gst_all_1.gst-plugins-bad
+      spice-gtk
+      gst_all_1.gstreamer
+      gst_all_1.gst-plugins-base
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-bad
 
       # Drivers
-      pkgs.dxvk
-      pkgs.vkd3d-proton
+      dxvk
+      vkd3d-proton
     ];
   };
 
@@ -239,18 +272,18 @@ with lib;
       nanorc = "
         #set mouse
         set autoindent
-        set linenumbers
+        #set linenumbers
       ";
       syntaxHighlight = true;
     };
     virt-manager = {
       enable = true;
       package = pkgs.virt-manager.overrideAttrs (oldAttrs: {
-        nativeBuildInputs = oldAttrs.nativeBuildInputs or [ ] ++ [ pkgs.wrapGAppsHook ];
-        buildInputs = pkgs.lib.lists.subtractLists [ pkgs.wrapGAppsHook ] oldAttrs.buildInputs ++ [
-          pkgs.gst_all_1.gst-plugins-base
-          pkgs.gst_all_1.gst-plugins-good
-        ];
+      nativeBuildInputs = oldAttrs.nativeBuildInputs or [ ] ++ [ pkgs.wrapGAppsHook ];
+      buildInputs = pkgs.lib.lists.subtractLists [ pkgs.wrapGAppsHook ] oldAttrs.buildInputs ++ [
+      pkgs.gst_all_1.gst-plugins-base
+      pkgs.gst_all_1.gst-plugins-good
+      ];
       });
     };
     appimage = {
@@ -276,42 +309,57 @@ with lib;
       enable = true;
       qemu = {
         vhostUserPackages = [ pkgs.virtiofsd ];
-        ovmf.enable = true;
+        ovmf = {
+          enable = true;
+          packages = [ pkgs.OVMFFull.fd ];
+        };
         swtpm.enable = true;
         runAsRoot = true;
       };
     };
   };
 
-  # flakes configuraiton
-  nix.settings = {
-    allowed-users = [ "*" ];
-    auto-optimise-store = true;
-    max-jobs = "auto";
-    require-sigs = true;
-    sandbox = true;
-    sandbox-fallback = false;
-    substituters = [
-      "https://nix-community.cachix.org/"
-      "https://chaotic-nyx.cachix.org/"
-      "https://cache.nixos.org/"
-    ];
-    trusted-users = [
-      "root"
-      "user"
-    ];
-    extra-sandbox-paths = [ ];
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+  # flakes configuration
+  nix = {
+    optimise.automatic = true;
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 3d";
+    };
+    settings = {
+      allowed-users = [ "*" ];
+      auto-optimise-store = true;
+      max-jobs = "auto";
+      require-sigs = true;
+      sandbox = true;
+      sandbox-fallback = false;
+      substituters = [
+        "https://nix-community.cachix.org/"
+        "https://chaotic-nyx.cachix.org/"
+        "https://cache.nixos.org/"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      ];
+      trusted-users = [
+        "root"
+        "user"
+      ];
+      extra-sandbox-paths = [ ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
   };
 
-  # This value detemines the NixOS release from which the defalt
-  # settings for stateful data, like file locaitons and database versions
-  #on your system were take. It's perfectly fine and recomended to leave
+  # This value detemines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were take. It's perfectly fine and recommended to leave
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 }
