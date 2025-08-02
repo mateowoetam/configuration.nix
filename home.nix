@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -6,7 +11,7 @@
   home = {
     username = "user";
     homeDirectory = "/home/user";
-    stateVersion = "25.05"; # Please read the comment before changing.
+    stateVersion = "25.11"; # Please read the comment before changing.
   };
 
   # The home.packages option allows you to install Nix packages into your
@@ -23,89 +28,103 @@
   };
   nix.package = pkgs.nix;
   home = {
-    packages = [
+    packages = with pkgs; [
       # Utilities
-      pkgs.alacritty
-      pkgs.kdePackages.filelight
-      pkgs.fwupd
-      pkgs.gnome-disk-utility
-      pkgs.kdePackages.kcalc
-      pkgs.kdePackages.kcharselect
-      pkgs.gh
-      pkgs.protonvpn-gui
-      pkgs.mullvad-vpn
-
-      # Browsers
-      pkgs.mullvad-browser
-      pkgs.ungoogled-chromium
-      pkgs.ladybird
-
-      # Media
-      pkgs.vlc
-      pkgs.guvcview
-      pkgs.kdePackages.kdenlive
-      pkgs.kdePackages.krecorder
-      pkgs.deluge
-      #pkgs.kdePackages.ktorrent
-      pkgs.blender
-      pkgs.gimp-with-plugins
-
-      # Writing
-      pkgs.libreoffice-qt-fresh
-      pkgs.kdePackages.ghostwriter
-      pkgs.mediawriter
-      pkgs.tt
-
-      # OBS stuff
-      pkgs.obs-studio
-      pkgs.obs-studio-plugins.obs-vkcapture
-      #pkgs.obs-studio-plugins.wlrobs-untsable
-      pkgs.obs-studio-plugins.obs-vaapi
-      pkgs.obs-studio-plugins.obs-backgroundremoval
-
-      # Social
-      pkgs.goofcord
-      pkgs.kdePackages.neochat
-      pkgs.element-desktop
-
-      # Gaming
-      #(pkgs.bottles.override { removeWarningPopup = true;})
-      pkgs.gamemode
-      pkgs.goverlay
-      pkgs.protonplus
-      pkgs.steam
-      pkgs.wineWowPackages.stable
-      pkgs.mcrcon
-      #pkgs.suyu
-      pkgs.ryubing
-
-      # Minecraft
-      (pkgs.prismlauncher.override {
-        jdks = [
-          pkgs.temurin-bin-21
-          pkgs.temurin-bin-8
-          pkgs.temurin-bin-17
-          pkgs.glfw-wayland-minecraft
-          pkgs.gcc13
-        ];
-      })
-      pkgs.mcpelauncher-ui-qt
-
-      # Productivity
-      pkgs.authenticator
-      pkgs.kdePackages.keysmith
-      pkgs.bitwarden-desktop
-
-      # Conferencing
-      #pkgs.zoom-us
-      #pkgs.teams-for-linux
+      alacritty
+      kdePackages.filelight
+      fwupd
+      gnome-disk-utility
+      kdePackages.kcalc
+      kdePackages.kcharselect
+      gh
+      protonvpn-gui
+      mullvad-vpn
+      wl-clipboard
 
       # Development
-      pkgs.directx-headers
+      gcc
+      cargo
+      rustc
+      cmake
+      ninja
+      pkg-config
+      jdk24
+      maven
+      android-studio
+
+      # Browsers
+      mullvad-browser
+      ungoogled-chromium
+      ladybird
+
+      # Media
+      vlc
+      guvcview
+      kdePackages.kdenlive
+      kdePackages.krecorder
+      snapshot
+      deluge
+      #kdePackages.ktorrent
+      #blender
+      gimp3-with-plugins
+
+      # Writing
+      libreoffice-qt-fresh
+      kdePackages.ghostwriter
+      mediawriter
+      tt
+
+      # OBS stuff
+      obs-studio
+      obs-studio-plugins.obs-vkcapture
+      #obs-studio-plugins.wlrobs-untsable
+      obs-studio-plugins.obs-vaapi
+      obs-studio-plugins.obs-backgroundremoval
+
+      # Social
+      goofcord
+      kdePackages.neochat
+      element-desktop
+
+      # Gaming
+      #(bottles.override { removeWarningPopup = true;})
+      gamemode
+      goverlay
+      protonplus
+      steam
+      wineWowPackages.stable
+      mcrcon
+      #suyu
+      ryubing
+      luanti
+
+      # Minecraft
+      (prismlauncher.override {
+        jdks = [
+          temurin-bin-21
+          temurin-bin-8
+          temurin-bin-17
+          glfw-wayland-minecraft
+          gcc13
+        ];
+      })
+      mcpelauncher-ui-qt
+
+      # Productivity
+      authenticator
+      kdePackages.keysmith
+      bitwarden-desktop
+
+      # Conferencing
+      #zoom-us
+      #teams-for-linux
+
+      # Development
+      directx-headers
 
       #LLMs
-      pkgs.kdePackages.alpaka
-      pkgs.ollama-rocm
+      kdePackages.alpaka
+      ollama-rocm
 
     ];
     file = {
@@ -154,6 +173,31 @@
         nativeMessagingHosts = with pkgs; [ kdePackages.plasma-browser-integration ];
       };
     };
+    bat = {
+      enable = true;
+      themes = {
+        catppuccin-mocha = {
+          src = pkgs.fetchFromGitHub {
+            owner = "catppuccin";
+            repo = "bat";
+            rev = "main";
+            hash = "sha256-lJapSgRVENTrbmpVyn+UQabC9fpV1G1e+CdlJ090uvg=";
+            sparseCheckout = [
+              "themes/Catppuccin Mocha.tmTheme"
+            ];
+          };
+        };
+      };
+      config = {
+        theme = "Catppuccin Mocha";
+        style = "plain";
+      };
+    };
+    zoxide = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+    };
     fish = {
       enable = true;
       shellAliases = {
@@ -165,8 +209,10 @@
         nso = "cd /etc/nixos/ || exit && nix store optimise";
         ncg = "cd /etc/nixos/ || exit && doas nix-collect-garbage --delete-older-than 3d";
         hms = "cd /etc/nixos/ || exit && home-manager switch --flake .";
-        unx = "cd /etc/nixos/ || exit && nix flake update && doas nixos-rebuild switch --flake . && nix store optimise && doas nix-collect-garbage --delete-older-than 3d && home-manager switch --flake .";
+        unx = "cd /etc/nixos/ || exit && nix flake update && doas nixos-rebuild switch --flake . && home-manager switch --flake . && nix store optimise && doas nix-collect-garbage --delete-older-than 3d";
         ttm = "tt -quotes en -theme catppuccin-mocha";
+        cat = "bat";
+        cd = "z";
       };
       interactiveShellInit = ''
         set fish_greeting # Disable greeting
@@ -209,13 +255,11 @@
             type = "packages";
             key = "Pkgs";
             keyColor = "blue";
-            #format = "{10} (nix-user), {15} (flatpak-user)";
           }
           {
             type = "de";
             key = "DE";
             keyColor = "blue";
-            #format = "{} {}";
           }
           {
             type = "shell";
